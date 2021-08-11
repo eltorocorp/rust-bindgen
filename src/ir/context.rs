@@ -250,9 +250,9 @@ where
     T: Copy + Into<ItemId>,
 {
     fn can_derive_partialord(&self, ctx: &BindgenContext) -> bool {
-        ctx.options().derive_partialord &&
-            ctx.lookup_can_derive_partialeq_or_partialord(*self) ==
-                CanDerive::Yes
+        ctx.options().derive_partialord
+            && ctx.lookup_can_derive_partialeq_or_partialord(*self)
+                == CanDerive::Yes
     }
 }
 
@@ -261,9 +261,9 @@ where
     T: Copy + Into<ItemId>,
 {
     fn can_derive_partialeq(&self, ctx: &BindgenContext) -> bool {
-        ctx.options().derive_partialeq &&
-            ctx.lookup_can_derive_partialeq_or_partialord(*self) ==
-                CanDerive::Yes
+        ctx.options().derive_partialeq
+            && ctx.lookup_can_derive_partialeq_or_partialord(*self)
+                == CanDerive::Yes
     }
 }
 
@@ -272,10 +272,10 @@ where
     T: Copy + Into<ItemId>,
 {
     fn can_derive_eq(&self, ctx: &BindgenContext) -> bool {
-        ctx.options().derive_eq &&
-            ctx.lookup_can_derive_partialeq_or_partialord(*self) ==
-                CanDerive::Yes &&
-            !ctx.lookup_has_float(*self)
+        ctx.options().derive_eq
+            && ctx.lookup_can_derive_partialeq_or_partialord(*self)
+                == CanDerive::Yes
+            && !ctx.lookup_has_float(*self)
     }
 }
 
@@ -284,10 +284,10 @@ where
     T: Copy + Into<ItemId>,
 {
     fn can_derive_ord(&self, ctx: &BindgenContext) -> bool {
-        ctx.options().derive_ord &&
-            ctx.lookup_can_derive_partialeq_or_partialord(*self) ==
-                CanDerive::Yes &&
-            !ctx.lookup_has_float(*self)
+        ctx.options().derive_ord
+            && ctx.lookup_can_derive_partialeq_or_partialord(*self)
+                == CanDerive::Yes
+            && !ctx.lookup_has_float(*self)
     }
 }
 
@@ -671,11 +671,11 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             item, declaration, location
         );
         debug_assert!(
-            declaration.is_some() ||
-                !item.kind().is_type() ||
-                item.kind().expect_type().is_builtin_or_type_param() ||
-                item.kind().expect_type().is_opaque(self, &item) ||
-                item.kind().expect_type().is_unresolved_ref(),
+            declaration.is_some()
+                || !item.kind().is_type()
+                || item.kind().expect_type().is_builtin_or_type_param()
+                || item.kind().expect_type().is_opaque(self, &item)
+                || item.kind().expect_type().is_unresolved_ref(),
             "Adding a type without declaration?"
         );
 
@@ -830,22 +830,22 @@ If you encounter an error missing from this list, please file an issue or a PR!"
 
     /// Mangles a name so it doesn't conflict with any keyword.
     pub fn rust_mangle<'a>(&self, name: &'a str) -> Cow<'a, str> {
-        if name.contains("@") ||
-            name.contains("?") ||
-            name.contains("$") ||
-            match name {
-                "abstract" | "alignof" | "as" | "async" | "become" |
-                "box" | "break" | "const" | "continue" | "crate" | "do" |
-                "dyn" | "else" | "enum" | "extern" | "false" | "final" |
-                "fn" | "for" | "if" | "impl" | "in" | "let" | "loop" |
-                "macro" | "match" | "mod" | "move" | "mut" | "offsetof" |
-                "override" | "priv" | "proc" | "pub" | "pure" | "ref" |
-                "return" | "Self" | "self" | "sizeof" | "static" |
-                "struct" | "super" | "trait" | "true" | "type" | "typeof" |
-                "unsafe" | "unsized" | "use" | "virtual" | "where" |
-                "while" | "yield" | "str" | "bool" | "f32" | "f64" |
-                "usize" | "isize" | "u128" | "i128" | "u64" | "i64" |
-                "u32" | "i32" | "u16" | "i16" | "u8" | "i8" | "_" => true,
+        if name.contains("@")
+            || name.contains("?")
+            || name.contains("$")
+            || match name {
+                "abstract" | "alignof" | "as" | "async" | "become" | "box"
+                | "break" | "const" | "continue" | "crate" | "do" | "dyn"
+                | "else" | "enum" | "extern" | "false" | "final" | "fn"
+                | "for" | "if" | "impl" | "in" | "let" | "loop" | "macro"
+                | "match" | "mod" | "move" | "mut" | "offsetof"
+                | "override" | "priv" | "proc" | "pub" | "pure" | "ref"
+                | "return" | "Self" | "self" | "sizeof" | "static"
+                | "struct" | "super" | "trait" | "true" | "type" | "typeof"
+                | "unsafe" | "unsized" | "use" | "virtual" | "where"
+                | "while" | "yield" | "str" | "bool" | "f32" | "f64"
+                | "usize" | "isize" | "u128" | "i128" | "u64" | "i64"
+                | "u32" | "i32" | "u16" | "i16" | "u8" | "i8" | "_" => true,
                 _ => false,
             }
         {
@@ -1045,10 +1045,10 @@ If you encounter an error missing from this list, please file an issue or a PR!"
             };
 
             match *ty.kind() {
-                TypeKind::Comp(..) |
-                TypeKind::TemplateAlias(..) |
-                TypeKind::Enum(..) |
-                TypeKind::Alias(..) => {}
+                TypeKind::Comp(..)
+                | TypeKind::TemplateAlias(..)
+                | TypeKind::Enum(..)
+                | TypeKind::Alias(..) => {}
                 _ => continue,
             }
 
@@ -1646,9 +1646,9 @@ If you encounter an error missing from this list, please file an issue or a PR!"
 
         for child in children.iter().rev() {
             match child.kind() {
-                clang_sys::CXCursor_TypeRef |
-                clang_sys::CXCursor_TypedefDecl |
-                clang_sys::CXCursor_TypeAliasDecl => {
+                clang_sys::CXCursor_TypeRef
+                | clang_sys::CXCursor_TypedefDecl
+                | clang_sys::CXCursor_TypeAliasDecl => {
                     // The `with_id` id will potentially end up unused if we give up
                     // on this type (for example, because it has const value
                     // template args), so if we pass `with_id` as the parent, it is
@@ -1672,8 +1672,8 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                         child,
                     )?;
 
-                    if num_expected_template_args == 0 ||
-                        child.has_at_least_num_children(
+                    if num_expected_template_args == 0
+                        || child.has_at_least_num_children(
                             num_expected_template_args,
                         )
                     {
@@ -1848,9 +1848,9 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                 //     of it, or
                 //   * we have already parsed and resolved this type, and
                 //     there's nothing left to do.
-                if decl.cursor().is_template_like() &&
-                    *ty != decl.cursor().cur_type() &&
-                    location.is_some()
+                if decl.cursor().is_template_like()
+                    && *ty != decl.cursor().cur_type()
+                    && location.is_some()
                 {
                     let location = location.unwrap();
 
@@ -1864,9 +1864,9 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                     // exposed.
                     //
                     // This is _tricky_, I know :(
-                    if decl.cursor().kind() == CXCursor_TypeAliasTemplateDecl &&
-                        !location.contains_cursor(CXCursor_TypeRef) &&
-                        ty.canonical_type().is_valid_and_exposed()
+                    if decl.cursor().kind() == CXCursor_TypeAliasTemplateDecl
+                        && !location.contains_cursor(CXCursor_TypeRef)
+                        && ty.canonical_type().is_valid_and_exposed()
                     {
                         return None;
                     }
@@ -2286,9 +2286,9 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                 .filter(|&(_, item)| {
                     // If nothing is explicitly allowlisted, then everything is fair
                     // game.
-                    if self.options().allowlisted_types.is_empty() &&
-                        self.options().allowlisted_functions.is_empty() &&
-                        self.options().allowlisted_vars.is_empty()
+                    if self.options().allowlisted_types.is_empty()
+                        && self.options().allowlisted_functions.is_empty()
+                        && self.options().allowlisted_vars.is_empty()
                     {
                         return true;
                     }
@@ -2319,19 +2319,19 @@ If you encounter an error missing from this list, please file an issue or a PR!"
                             // make the #[derive] analysis not be lame.
                             if !self.options().allowlist_recursively {
                                 match *ty.kind() {
-                                    TypeKind::Void |
-                                    TypeKind::NullPtr |
-                                    TypeKind::Int(..) |
-                                    TypeKind::Float(..) |
-                                    TypeKind::Complex(..) |
-                                    TypeKind::Array(..) |
-                                    TypeKind::Vector(..) |
-                                    TypeKind::Pointer(..) |
-                                    TypeKind::Reference(..) |
-                                    TypeKind::Function(..) |
-                                    TypeKind::ResolvedTypeRef(..) |
-                                    TypeKind::Opaque |
-                                    TypeKind::TypeParam => return true,
+                                    TypeKind::Void
+                                    | TypeKind::NullPtr
+                                    | TypeKind::Int(..)
+                                    | TypeKind::Float(..)
+                                    | TypeKind::Complex(..)
+                                    | TypeKind::Array(..)
+                                    | TypeKind::Vector(..)
+                                    | TypeKind::Pointer(..)
+                                    | TypeKind::Reference(..)
+                                    | TypeKind::Function(..)
+                                    | TypeKind::ResolvedTypeRef(..)
+                                    | TypeKind::Opaque
+                                    | TypeKind::TypeParam => return true,
                                     _ => {}
                                 };
                             }
@@ -2539,9 +2539,9 @@ If you encounter an error missing from this list, please file an issue or a PR!"
     fn compute_cannot_derive_partialord_partialeq_or_eq(&mut self) {
         let _t = self.timer("compute_cannot_derive_partialord_partialeq_or_eq");
         assert!(self.cannot_derive_partialeq_or_partialord.is_none());
-        if self.options.derive_partialord ||
-            self.options.derive_partialeq ||
-            self.options.derive_eq
+        if self.options.derive_partialord
+            || self.options.derive_partialeq
+            || self.options.derive_eq
         {
             self.cannot_derive_partialeq_or_partialord =
                 Some(analyze::<CannotDerive>((
@@ -2583,8 +2583,8 @@ If you encounter an error missing from this list, please file an issue or a PR!"
         // derive `Copy` or not.
         let id = id.into();
 
-        !self.lookup_has_type_param_in_array(id) &&
-            !self.cannot_derive_copy.as_ref().unwrap().contains(&id)
+        !self.lookup_has_type_param_in_array(id)
+            && !self.cannot_derive_copy.as_ref().unwrap().contains(&id)
     }
 
     /// Compute whether the type has type parameter in array.
@@ -2785,15 +2785,15 @@ impl TemplateParameters for PartialType {
         // Wouldn't it be nice if libclang would reliably give us this
         // information‽
         match self.decl().kind() {
-            clang_sys::CXCursor_ClassTemplate |
-            clang_sys::CXCursor_FunctionTemplate |
-            clang_sys::CXCursor_TypeAliasTemplateDecl => {
+            clang_sys::CXCursor_ClassTemplate
+            | clang_sys::CXCursor_FunctionTemplate
+            | clang_sys::CXCursor_TypeAliasTemplateDecl => {
                 let mut num_params = 0;
                 self.decl().visit(|c| {
                     match c.kind() {
-                        clang_sys::CXCursor_TemplateTypeParameter |
-                        clang_sys::CXCursor_TemplateTemplateParameter |
-                        clang_sys::CXCursor_NonTypeTemplateParameter => {
+                        clang_sys::CXCursor_TemplateTypeParameter
+                        | clang_sys::CXCursor_TemplateTemplateParameter
+                        | clang_sys::CXCursor_NonTypeTemplateParameter => {
                             num_params += 1;
                         }
                         _ => {}

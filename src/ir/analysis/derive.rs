@@ -84,22 +84,22 @@ type EdgePredicate = fn(EdgeKind) -> bool;
 fn consider_edge_default(kind: EdgeKind) -> bool {
     match kind {
         // These are the only edges that can affect whether a type can derive
-        EdgeKind::BaseMember |
-        EdgeKind::Field |
-        EdgeKind::TypeReference |
-        EdgeKind::VarType |
-        EdgeKind::TemplateArgument |
-        EdgeKind::TemplateDeclaration |
-        EdgeKind::TemplateParameterDefinition => true,
+        EdgeKind::BaseMember
+        | EdgeKind::Field
+        | EdgeKind::TypeReference
+        | EdgeKind::VarType
+        | EdgeKind::TemplateArgument
+        | EdgeKind::TemplateDeclaration
+        | EdgeKind::TemplateParameterDefinition => true,
 
-        EdgeKind::Constructor |
-        EdgeKind::Destructor |
-        EdgeKind::FunctionReturn |
-        EdgeKind::FunctionParameter |
-        EdgeKind::InnerType |
-        EdgeKind::InnerVar |
-        EdgeKind::Method |
-        EdgeKind::Generic => false,
+        EdgeKind::Constructor
+        | EdgeKind::Destructor
+        | EdgeKind::FunctionReturn
+        | EdgeKind::FunctionParameter
+        | EdgeKind::InnerType
+        | EdgeKind::InnerVar
+        | EdgeKind::Method
+        | EdgeKind::Generic => false,
     }
 }
 
@@ -169,9 +169,9 @@ impl<'ctx> CannotDerive<'ctx> {
 
         trace!("ty: {:?}", ty);
         if item.is_opaque(self.ctx, &()) {
-            if !self.derive_trait.can_derive_union() &&
-                ty.is_union() &&
-                self.ctx.options().rust_features().untagged_union
+            if !self.derive_trait.can_derive_union()
+                && ty.is_union()
+                && self.ctx.options().rust_features().untagged_union
             {
                 trace!(
                     "    cannot derive {} for Rust unions",
@@ -205,18 +205,18 @@ impl<'ctx> CannotDerive<'ctx> {
         match *ty.kind() {
             // Handle the simple cases. These can derive traits without further
             // information.
-            TypeKind::Void |
-            TypeKind::NullPtr |
-            TypeKind::Int(..) |
-            TypeKind::Complex(..) |
-            TypeKind::Float(..) |
-            TypeKind::Enum(..) |
-            TypeKind::TypeParam |
-            TypeKind::UnresolvedTypeRef(..) |
-            TypeKind::Reference(..) |
-            TypeKind::ObjCInterface(..) |
-            TypeKind::ObjCId |
-            TypeKind::ObjCSel => {
+            TypeKind::Void
+            | TypeKind::NullPtr
+            | TypeKind::Int(..)
+            | TypeKind::Complex(..)
+            | TypeKind::Float(..)
+            | TypeKind::Enum(..)
+            | TypeKind::TypeParam
+            | TypeKind::UnresolvedTypeRef(..)
+            | TypeKind::Reference(..)
+            | TypeKind::ObjCInterface(..)
+            | TypeKind::ObjCId
+            | TypeKind::ObjCSel => {
                 return self.derive_trait.can_derive_simple(ty.kind());
             }
             TypeKind::Pointer(inner) => {
@@ -294,8 +294,8 @@ impl<'ctx> CannotDerive<'ctx> {
                     "The early ty.is_opaque check should have handled this case"
                 );
 
-                if !self.derive_trait.can_derive_compound_forward_decl() &&
-                    info.is_forward_declaration()
+                if !self.derive_trait.can_derive_compound_forward_decl()
+                    && info.is_forward_declaration()
                 {
                     trace!(
                         "    cannot derive {} for forward decls",
@@ -307,8 +307,8 @@ impl<'ctx> CannotDerive<'ctx> {
                 // NOTE: Take into account that while unions in C and C++ are copied by
                 // default, the may have an explicit destructor in C++, so we can't
                 // defer this check just for the union case.
-                if !self.derive_trait.can_derive_compound_with_destructor() &&
-                    self.ctx.lookup_has_destructor(
+                if !self.derive_trait.can_derive_compound_with_destructor()
+                    && self.ctx.lookup_has_destructor(
                         item.id().expect_type_id(self.ctx),
                     )
                 {
@@ -364,8 +364,8 @@ impl<'ctx> CannotDerive<'ctx> {
                     }
                 }
 
-                if !self.derive_trait.can_derive_compound_with_vtable() &&
-                    item.has_vtable(self.ctx)
+                if !self.derive_trait.can_derive_compound_with_vtable()
+                    && item.has_vtable(self.ctx)
                 {
                     trace!(
                         "    cannot derive {} for comp with vtable",
@@ -377,9 +377,9 @@ impl<'ctx> CannotDerive<'ctx> {
                 // Bitfield units are always represented as arrays of u8, but
                 // they're not traced as arrays, so we need to check here
                 // instead.
-                if !self.derive_trait.can_derive_large_array(&self.ctx) &&
-                    info.has_too_large_bitfield_unit() &&
-                    !item.is_opaque(self.ctx, &())
+                if !self.derive_trait.can_derive_large_array(&self.ctx)
+                    && info.has_too_large_bitfield_unit()
+                    && !item.is_opaque(self.ctx, &())
                 {
                     trace!(
                         "    cannot derive {} for comp with too large bitfield unit",
@@ -392,10 +392,10 @@ impl<'ctx> CannotDerive<'ctx> {
                 return self.constrain_join(item, pred);
             }
 
-            TypeKind::ResolvedTypeRef(..) |
-            TypeKind::TemplateAlias(..) |
-            TypeKind::Alias(..) |
-            TypeKind::BlockPointer(..) => {
+            TypeKind::ResolvedTypeRef(..)
+            | TypeKind::TemplateAlias(..)
+            | TypeKind::Alias(..)
+            | TypeKind::BlockPointer(..) => {
                 let pred = self.derive_trait.consider_edge_typeref();
                 return self.constrain_join(item, pred);
             }
@@ -540,9 +540,9 @@ impl DeriveTrait {
 
     fn can_derive_incomplete_array(&self) -> bool {
         match self {
-            DeriveTrait::Copy |
-            DeriveTrait::Hash |
-            DeriveTrait::PartialEqOrPartialOrd => false,
+            DeriveTrait::Copy
+            | DeriveTrait::Hash
+            | DeriveTrait::PartialEqOrPartialOrd => false,
             _ => true,
         }
     }
@@ -596,14 +596,14 @@ impl DeriveTrait {
     fn can_derive_simple(&self, kind: &TypeKind) -> CanDerive {
         match (self, kind) {
             // === Default ===
-            (DeriveTrait::Default, TypeKind::Void) |
-            (DeriveTrait::Default, TypeKind::NullPtr) |
-            (DeriveTrait::Default, TypeKind::Enum(..)) |
-            (DeriveTrait::Default, TypeKind::Reference(..)) |
-            (DeriveTrait::Default, TypeKind::TypeParam) |
-            (DeriveTrait::Default, TypeKind::ObjCInterface(..)) |
-            (DeriveTrait::Default, TypeKind::ObjCId) |
-            (DeriveTrait::Default, TypeKind::ObjCSel) => {
+            (DeriveTrait::Default, TypeKind::Void)
+            | (DeriveTrait::Default, TypeKind::NullPtr)
+            | (DeriveTrait::Default, TypeKind::Enum(..))
+            | (DeriveTrait::Default, TypeKind::Reference(..))
+            | (DeriveTrait::Default, TypeKind::TypeParam)
+            | (DeriveTrait::Default, TypeKind::ObjCInterface(..))
+            | (DeriveTrait::Default, TypeKind::ObjCId)
+            | (DeriveTrait::Default, TypeKind::ObjCSel) => {
                 trace!("    types that always cannot derive Default");
                 CanDerive::No
             }
@@ -613,8 +613,8 @@ impl DeriveTrait {
                 )
             }
             // === Hash ===
-            (DeriveTrait::Hash, TypeKind::Float(..)) |
-            (DeriveTrait::Hash, TypeKind::Complex(..)) => {
+            (DeriveTrait::Hash, TypeKind::Float(..))
+            | (DeriveTrait::Hash, TypeKind::Complex(..)) => {
                 trace!("    float cannot derive Hash");
                 CanDerive::No
             }
@@ -693,8 +693,8 @@ impl<'ctx> MonotoneFramework for CannotDerive<'ctx> {
             Some(ty) => {
                 let mut can_derive = self.constrain_type(item, ty);
                 if let CanDerive::Yes = can_derive {
-                    if !self.derive_trait.can_derive_large_array(&self.ctx) &&
-                        ty.layout(self.ctx).map_or(false, |l| {
+                    if !self.derive_trait.can_derive_large_array(&self.ctx)
+                        && ty.layout(self.ctx).map_or(false, |l| {
                             l.align > RUST_DERIVE_IN_ARRAY_LIMIT
                         })
                     {

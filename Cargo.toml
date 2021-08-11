@@ -14,7 +14,7 @@ readme = "README.md"
 repository = "https://github.com/rust-lang/rust-bindgen"
 documentation = "https://docs.rs/bindgen"
 homepage = "https://rust-lang.github.io/rust-bindgen/"
-version = "0.59.1"
+version = "0.60.0"
 edition = "2018"
 build = "build.rs"
 
@@ -46,11 +46,11 @@ shlex = "1"
 tempfile = "3"
 
 [dependencies]
-bitflags = "1.0.3"
-cexpr = "0.5"
+bitflags = "1.2.1"
+cexpr = { git = "https://github.com/bcmcmill/rust-cexpr/", branch = "upgrade-nom" }
 # This kinda sucks: https://github.com/rust-lang/cargo/issues/1982
 clap = { version = "2", optional = true }
-clang-sys = { version = "1", features = ["clang_6_0"] }
+clang-sys = { version = "1.2", features = ["clang_11_0"] }
 lazycell = "1"
 lazy_static = "1"
 peeking_take_while = "0.1.2"
