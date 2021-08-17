@@ -47,7 +47,7 @@ tempfile = "3"
 
 [dependencies]
 bitflags = "1.2.1"
-cexpr = { git = "https://github.com/bcmcmill/rust-cexpr/", branch = "upgrade-nom" }
+cexpr = { git = "ssh://github.com/eltorocorp/rust-cexpr.git", branch = "master" }
 # This kinda sucks: https://github.com/rust-lang/cargo/issues/1982
 clap = { version = "2", optional = true }
 clang-sys = { version = "1.2", features = ["clang_11_0"] }
